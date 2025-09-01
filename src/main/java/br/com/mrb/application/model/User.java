@@ -5,23 +5,24 @@ import jakarta.persistence.*;
 import java.util.HashSet;
 
 @Entity
-@Table(name = "roles")
-public class Role {
+@Table(name = "users")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, unique = true)
-    private RoleName name;
+    @Column(nullable = false, unique = false)
+    private String name;
 
-    public enum RoleName {
-        ROLE_USER, ROLE_ADMIN;
-    }
+    @Column(nullable = false, unique = false)
+    private String email;
+
+    @Column(nullable = false, unique = false)
+    private String password;
 
     @OneToMany(
-            mappedBy = "role",
+            mappedBy = "user",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private Set<UserRole> userRoles = new HashSet<>();
