@@ -7,6 +7,7 @@ import br.com.mrb.application.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +26,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
         var authentication = authManager.authenticate(
-                new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+                new UsernamePasswordAuthenticationToken(
                         request.email(), request.password()
                 )
         );
