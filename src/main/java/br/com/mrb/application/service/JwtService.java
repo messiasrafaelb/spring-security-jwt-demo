@@ -1,6 +1,10 @@
 package br.com.mrb.application.service;
 
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -19,8 +23,8 @@ public class JwtService {
     private long expirationMs;
 
     private Key getSigningKey() {
-        byte[] keyBytes = io.jsonwebtoken.io.Decoders.BASE64.decode(secretBase64);
-        return io.jsonwebtoken.security.Keys.hmacShaKeyFor(keyBytes);
+        byte[] keyBytes = Decoders.BASE64.decode(secretBase64);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String generateToken(UserDetails user) {
@@ -31,17 +35,17 @@ public class JwtService {
                 .map(GrantedAuthority::getAuthority)
                 .toList();
 
-        return io.jsonwebtoken.Jwts.builder()
+        return Jwts.builder()
                 .setSubject(user.getUsername())
                 .setIssuedAt(now)
                 .setExpiration(exp)
                 .claim("roles", roles)
-                .signWith(getSigningKey(), io.jsonwebtoken.SignatureAlgorithm.HS256)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public String extractUsername(String token) {
-        return io.jsonwebtoken.Jwts.parserBuilder()
+        return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
@@ -51,7 +55,7 @@ public class JwtService {
 
     public boolean isValid(String token, UserDetails user) {
         try {
-            var parser = io.jsonwebtoken.Jwts.parserBuilder()
+            var parser = Jwts.parserBuilder()
                     .setSigningKey(getSigningKey())
                     .build();
             var claims = parser.parseClaimsJws(token).getBody();
