@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.security.Key;
+import java.time.Duration;
 import java.util.Date;
 
 @Component
@@ -19,8 +20,8 @@ public class JwtService {
     @Value("${security.jwt.secret}")
     private String secretBase64;
 
-    @Value("${security.jwt.expiration-ms:3600000}")
-    private long expirationMs;
+    @Value("${security.jwt.expiration:1h}")
+    private Duration expirationMs;
 
     private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretBase64);
@@ -29,7 +30,7 @@ public class JwtService {
 
     public String generateToken(UserDetails user) {
         Date now = new Date();
-        Date exp = new Date(now.getTime() + expirationMs);
+        Date exp = new Date(now.getTime() + expirationMs.toMillis());
 
         var roles = user.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
