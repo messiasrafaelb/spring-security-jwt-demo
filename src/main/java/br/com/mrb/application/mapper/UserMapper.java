@@ -19,6 +19,6 @@ public interface UserMapper {
     default void addRole(@MappingTarget User user, @Context Role role, @Context org.springframework.security.crypto.password.PasswordEncoder encoder, RegisterRequest request) {
         user.setPassword(encoder.encode(request.getPassword()));
         UserRole ur = new UserRole(user, role);
-        user.getUserRoles().add(ur);
+        user.getRoles().add(ur);
     }
 }
