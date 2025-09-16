@@ -28,6 +28,7 @@ public class AuthController {
     private final JwtService jwtService;
     private final RegisterService registerService;
 
+// Refactor method by moving logic to a service
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
         var authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(
