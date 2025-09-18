@@ -5,19 +5,16 @@ import br.com.mrb.application.dto.AuthResponse;
 import br.com.mrb.application.dto.RegisterRequest;
 import br.com.mrb.application.dto.RegisterResponse;
 import br.com.mrb.application.service.security.AuthService;
-import br.com.mrb.application.service.security.JwtService;
 import br.com.mrb.application.service.security.RegisterService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import static org.springframework.http.HttpStatus.*;
+
+import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequestMapping("/auth")
