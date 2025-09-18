@@ -6,19 +6,23 @@ import br.com.mrb.application.model.Role;
 import br.com.mrb.application.model.User;
 import br.com.mrb.application.model.UserRole;
 import org.mapstruct.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Mapper(componentModel = "spring")
+@Mapper
+@MapperConfig(componentModel = "spring")
 public interface UserMapper {
-    @Mapping(target = "id", ignore = true) // id será gerado pelo banco
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "userRoles", expression = "java(new java.util.HashSet<>())")
-    User toEntity(RegisterRequest request, @Context Role role, @Context org.springframework.security.crypto.password.PasswordEncoder encoder);
+    User toEntity(RegisterRequest request, @Context Role role, @Context PasswordEncoder encoder);
 
     RegisterResponse toResponse(User user);
 
     @AfterMapping
-    default void addRole(@MappingTarget User user, @Context Role role, @Context org.springframework.security.crypto.password.PasswordEncoder encoder, RegisterRequest request) {
+    default void addRole(
+    @MappingTarget User user, @Context Role role,
+    @Context PasswordEncoder encoder, RegisterRequest request) {
         user.setPassword(encoder.encode(request.getPassword()));
-        UserRole ur = new UserRole(user, role);
+        var ur = new UserRole(user, role);
         user.getRoles().add(ur);
     }
 }
