@@ -5,7 +5,7 @@ import br.com.mrb.application.dto.AuthResponse;
 import br.com.mrb.application.dto.RegisterRequest;
 import br.com.mrb.application.dto.RegisterResponse;
 import br.com.mrb.application.service.security.JwtService;
-import br.com.mrb.application.service.RegisterService;
+import br.com.mrb.application.service.security.RegisterService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
