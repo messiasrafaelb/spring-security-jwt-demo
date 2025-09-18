@@ -10,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Mapper
 @MapperConfig(componentModel = "spring")
-public interface UserMapper {
+public interface RegisterMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "userRoles", expression = "java(new java.util.HashSet<>())")
     User toEntity(RegisterRequest request, @Context Role role, @Context PasswordEncoder encoder);
