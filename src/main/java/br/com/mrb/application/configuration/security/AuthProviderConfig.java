@@ -1,4 +1,4 @@
-package br.com.mrb.application.configuration;
+package br.com.mrb.application.configuration.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

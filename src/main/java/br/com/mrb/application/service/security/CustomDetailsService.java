@@ -1,4 +1,4 @@
-package br.com.mrb.application.service;
+package br.com.mrb.application.service.security;
 
 import br.com.mrb.application.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

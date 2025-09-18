@@ -11,16 +11,17 @@ import lombok.*;
 public class UserRole {
 
     @Id
-    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @EqualsAndHashCode.Include
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
+    @EqualsAndHashCode.Include
     private Role role;
 
     public UserRole(User user, Role role) {

@@ -1,6 +1,6 @@
-package br.com.mrb.application.configuration;
+package br.com.mrb.application.configuration.security;
 
-import br.com.mrb.application.service.JwtService;
+import br.com.mrb.application.service.security.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,8 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import br.com.mrb.application.service.CustomDetailsService;
-
+import br.com.mrb.application.service.security.CustomDetailsService;
 import java.io.IOException;
 
 @Component
