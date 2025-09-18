@@ -4,6 +4,7 @@ import br.com.mrb.application.dto.AuthRequest;
 import br.com.mrb.application.dto.AuthResponse;
 import br.com.mrb.application.dto.RegisterRequest;
 import br.com.mrb.application.dto.RegisterResponse;
+import br.com.mrb.application.service.security.AuthService;
 import br.com.mrb.application.service.security.JwtService;
 import br.com.mrb.application.service.security.RegisterService;
 import jakarta.validation.Valid;
@@ -23,23 +24,16 @@ import static org.springframework.http.HttpStatus.*;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthenticationManager authManager;
-    private final JwtService jwtService;
     private final RegisterService registerService;
+    private final AuthService authService;
 
-// Refactor method by moving logic to a service
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
-        var authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(
-                                                            request.email(), request.password()));
-        var user = (UserDetails) authentication.getPrincipal();
-        String token = jwtService.generateToken(user);
-        return ResponseEntity.ok(new AuthResponse(token));
+        return ResponseEntity.ok(authService.userLogin(request));
     }
 
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
-        var user = registerService.save(request);
-        return ResponseEntity.status(CREATED).body(user);
+        return ResponseEntity.status(CREATED).body(registerService.save(request));
     }
 }
