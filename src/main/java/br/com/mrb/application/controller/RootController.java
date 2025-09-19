@@ -1,6 +1,6 @@
 package br.com.mrb.application.controller;
 
-import br.com.mrb.application.assembler.RootModel;
+import br.com.mrb.application.assembler.RootModelAssembler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,7 @@ import static org.springframework.http.HttpStatus.*;
 @RequiredArgsConstructor
 public class RootController {
 
-    private final RootModel assembler;
+    private final RootModelAssembler assembler;
 
     @GetMapping("/")
     public ResponseEntity<RepresentationModel<?>> root() {

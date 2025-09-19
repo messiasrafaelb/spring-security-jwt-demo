@@ -9,7 +9,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
-public class RootModel {
+public class RootModelAssembler {
     public RepresentationModel<?> toModel() {
         RepresentationModel<?> model = new RepresentationModel<>();
         model.add(linkTo(methodOn(AuthController.class).login(null)).withRel("login"));
