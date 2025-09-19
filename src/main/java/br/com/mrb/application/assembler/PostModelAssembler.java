@@ -27,7 +27,7 @@ public class PostModelAssembler {
                 linkTo(methodOn(PostController.class).patchPostById(post.id(), null)).withRel("patch"),
                 linkTo(methodOn(PostController.class).deletePostById(post.id())).withRel("delete"),
                 linkTo(methodOn(PostController.class).getPostsByAuthorId(post.authorId(), pageable)).withRel("author-posts"),
-                linkTo(methodOn(PostController.class).getAllPosts(pageable)).withRel("collection")
+                linkTo(methodOn(PostController.class).getAllPosts(pageable)).withRel("posts")
         );
     }
 
@@ -40,6 +40,6 @@ public class PostModelAssembler {
     }
 
     public EntityModel<Map<String, String>> deletedResponse(Map<String, String> map, Pageable pageable) {
-        return EntityModel.of(map, linkTo(methodOn(PostController.class).getAllPosts(pageable)).withRel("collection"));
+        return EntityModel.of(map, linkTo(methodOn(PostController.class).getAllPosts(pageable)).withRel("posts"));
     }
 }
