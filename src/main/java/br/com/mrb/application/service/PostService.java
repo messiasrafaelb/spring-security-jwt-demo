@@ -44,17 +44,10 @@ public class PostService {
         return mapper.toResponse(post_repository.save(post));
     }
 
-    public PostResponse create(PostRequest postRequest, Long authorId) {
+    public PostResponse create(Long authorId, PostRequest postRequest) {
         var author = user_repository.findById(authorId)
                 .orElseThrow(() -> new AuthorNotFoundException("Author not found with id (" + authorId + ")"));
         return mapper.toResponse(post_repository.save(mapper.toEntity(postRequest, author)));
-    }
-
-    public Map<String, String > deleteById(Long postId) {
-        var post = post_repository.findById(postId)
-                .orElseThrow(() -> new PostNotFoundException("Post not found with id (" + postId + ")"));
-        post_repository.delete(post);
-        return Map.of("message","Post deleted successfully");
     }
 
     public PostResponse patch(Long postId, PostPatchRequest postRequest) {
@@ -65,6 +58,13 @@ public class PostService {
         if (postRequest.content() != null && !postRequest.content().isBlank())
             post.setContent(postRequest.content());
         return mapper.toResponse(post_repository.save(post));
+    }
+
+    public Map<String, String > deleteById(Long postId) {
+        var post = post_repository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException("Post not found with id (" + postId + ")"));
+        post_repository.delete(post);
+        return Map.of("message","Post deleted successfully");
     }
 
 }
