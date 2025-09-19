@@ -1,5 +1,6 @@
 package br.com.mrb.application.controller;
 
+import br.com.mrb.application.assembler.PostModelAssembler;
 import br.com.mrb.application.dto.PostPatchRequest;
 import br.com.mrb.application.dto.PostRequest;
 import br.com.mrb.application.dto.PostResponse;
@@ -8,8 +9,11 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,51 +29,71 @@ import static org.springframework.http.HttpStatus.OK;
 public class PostController {
 
     private final PostService postService;
+    private final PostModelAssembler assembler;
 
     @GetMapping
-    public ResponseEntity<Page<PostResponse>> getAllPosts(
+    public ResponseEntity<PagedModel<EntityModel<PostResponse>>> getAllPosts(
             @PageableDefault(page = 0, size = 15, sort = "title", direction = ASC) Pageable pageable) {
-        return ResponseEntity.status(OK).body(postService.findAll(pageable));
+        Page<PostResponse> page = postService.findAll(pageable);
+        var pagedModel = assembler.toPagedModel(page, pageable);
+        return ResponseEntity.status(OK).body(pagedModel);
     }
 
     @GetMapping("/author/{authorId}")
-    public ResponseEntity<Page<PostResponse>> getPostsByAuthorId(
+    public ResponseEntity<PagedModel<EntityModel<PostResponse>>> getPostsByAuthorId(
             @PathVariable @Positive(message = "Id must be greater than 0") Long authorId,
             @PageableDefault(page = 0, size = 15, sort = "title", direction = ASC) Pageable pageable) {
-        return ResponseEntity.status(OK).body(postService.findPostsByAuthorId(authorId, pageable));
+        Page<PostResponse> page = postService.findPostsByAuthorId(authorId, pageable);
+        var pagedModel = assembler.toPagedModel(page, pageable);
+        return ResponseEntity.status(OK).body(pagedModel);
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<PostResponse> getPostById(
+    public ResponseEntity<EntityModel<PostResponse>> getPostById(
             @PathVariable @Positive(message = "Id must be greater than 0") Long postId) {
-        return ResponseEntity.status(OK).body(postService.findPostById(postId));
+        var pageable = PageRequest.of(0, 15, ASC);
+        var post = postService.findPostById(postId);
+        var model = assembler.toModel(post, pageable);
+        return ResponseEntity.status(OK).body(model);
     }
 
     @PostMapping("/author/{authorId}")
-    public ResponseEntity<PostResponse> createPost(
-            @Valid @RequestBody PostRequest post,
-            @PathVariable @Positive(message = "Id must be greater than 0") Long authorId) {
-        return ResponseEntity.status(CREATED).body(postService.create(post, authorId));
+    public ResponseEntity<EntityModel<PostResponse>> createPost(
+            @PathVariable @Positive(message = "Id must be greater than 0") Long authorId,
+            @Valid @RequestBody PostRequest request) {
+        var pageable = PageRequest.of(0, 15, ASC);
+        var post = postService.create(authorId, request);
+        var model = assembler.toModel(post, pageable);
+        return ResponseEntity.status(CREATED).body(model);
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity<PostResponse> updatePostById(
+    public ResponseEntity<EntityModel<PostResponse>> updatePostById(
             @PathVariable @Positive(message = "Id must be greater than 0") Long postId,
-            @Valid @RequestBody PostRequest post) {
-        return ResponseEntity.status(OK).body(postService.update(postId, post));
+            @Valid @RequestBody PostRequest request) {
+        var pageable = PageRequest.of(0, 15, ASC);
+        var post = postService.update(postId, request);
+        var model = assembler.toModel(post, pageable);
+        return ResponseEntity.status(OK).body(model);
     }
 
     @PatchMapping("/{postId}")
-    public ResponseEntity<PostResponse> patchPostById(
+    public ResponseEntity<EntityModel<PostResponse>> patchPostById(
             @PathVariable @Positive(message = "Id must be greater than 0") Long postId,
-            @RequestBody PostPatchRequest patchRequest) {
-        return ResponseEntity.ok(postService.patch(postId, patchRequest));
+            @RequestBody PostPatchRequest request) {
+        var pageable = PageRequest.of(0, 15, ASC);
+        var post = postService.patch( postId, request);
+        var model = assembler.toModel(post, pageable);
+        return ResponseEntity.status(OK).body(model);
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Map<String ,String>> deletePostById(
+    public ResponseEntity<EntityModel<Map<String ,String>>> deletePostById(
             @PathVariable @Positive(message = "Id must be greater than 0") Long postId) {
-        return ResponseEntity.status(OK).body(postService.deleteById(postId));
+        var pageable = PageRequest.of(0, 15, ASC);
+        var map = postService.deleteById(postId);
+        var model = assembler.deletedResponse(map, pageable);
+        return ResponseEntity.status(OK).body(model);
     }
 
 }
