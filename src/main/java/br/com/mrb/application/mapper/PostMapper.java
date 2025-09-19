@@ -8,7 +8,9 @@ import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface PostMapper {
-    @Mapping(source = "author.name", target = "authorName")
+
+    @Mapping(target = "authorName", source = "author.name")
+    @Mapping(target = "authorId", source = "author.id")
     PostResponse toResponse(Post post);
 
     @Mapping(target = "id", ignore = true)
