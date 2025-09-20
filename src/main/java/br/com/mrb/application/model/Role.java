@@ -19,11 +19,7 @@ public class Role {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, unique = true)
-    private RoleName name;
-
-    public enum RoleName {
-        ROLE_USER, ROLE_ADMIN;
-    }
+    private RoleType type;
 
     @OneToMany(
             mappedBy = "role",
@@ -31,8 +27,6 @@ public class Role {
             orphanRemoval = true)
     private final Set<UserRole> userRoles = new HashSet<>();
 
-    public Role(RoleName name) {
-        this.name = name;
-    }
+
 }
 

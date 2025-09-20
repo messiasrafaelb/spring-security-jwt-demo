@@ -27,6 +27,7 @@ public class PostService {
     }
 
     public Page<PostResponse> findPostsByAuthorId(Long authorId, Pageable pageable) {
+        user_repository.findById(authorId).orElseThrow(() -> new AuthorNotFoundException("Author not found"));
         return post_repository.findByAuthorId(authorId, pageable).map(mapper::toResponse);
     }
 

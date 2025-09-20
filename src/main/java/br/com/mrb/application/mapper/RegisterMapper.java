@@ -8,11 +8,10 @@ import br.com.mrb.application.model.UserRole;
 import org.mapstruct.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Mapper
-@MapperConfig(componentModel = "spring")
+@Mapper(componentModel = "spring")
 public interface RegisterMapper {
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "userRoles", expression = "java(new java.util.HashSet<>())")
+    @Mapping(target = "roles", expression = "java(new java.util.HashSet<>())")
     User toEntity(RegisterRequest request, @Context Role role, @Context PasswordEncoder encoder);
 
     RegisterResponse toResponse(User user);

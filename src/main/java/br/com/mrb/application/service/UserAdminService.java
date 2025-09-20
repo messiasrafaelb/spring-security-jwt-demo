@@ -4,7 +4,7 @@ import br.com.mrb.application.dto.UserResponse;
 import br.com.mrb.application.exception.RoleNotFoundException;
 import br.com.mrb.application.exception.UserNotFoundException;
 import br.com.mrb.application.mapper.UserMapper;
-import br.com.mrb.application.model.Role;
+import br.com.mrb.application.model.RoleType;
 import br.com.mrb.application.model.UserRole;
 import br.com.mrb.application.repository.RoleRepository;
 import br.com.mrb.application.repository.UserRepository;
@@ -29,7 +29,7 @@ public class UserAdminService {
     public UserResponse changeRole(Long userId, String roleName) {
         var user = user_repository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id (" + userId + ")"));
-        var role = role_repository.findByName(Role.RoleName.valueOf(roleName))
+        var role = role_repository.findByType(RoleType.valueOf(roleName))
                 .orElseThrow(() -> new RoleNotFoundException("Role not found"));
         UserRole ur = new UserRole(user, role);
         user.getRoles().add(ur);

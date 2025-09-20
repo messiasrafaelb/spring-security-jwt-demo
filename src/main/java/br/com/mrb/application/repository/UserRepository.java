@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     @Query("""
     select u from User u
-    left join fetch u.userRoles ur
+    left join fetch u.roles ur
     left join fetch ur.role r
     where u.email = :email
     """)

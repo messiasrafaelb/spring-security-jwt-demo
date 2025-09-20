@@ -9,7 +9,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.EntityModel;
@@ -51,9 +50,8 @@ public class PostController {
     @GetMapping("/{postId}")
     public ResponseEntity<EntityModel<PostResponse>> getPostById(
             @PathVariable @Positive(message = "Id must be greater than 0") Long postId) {
-        var pageable = PageRequest.of(0, 15, ASC);
         var post = postService.findPostById(postId);
-        var model = assembler.toModel(post, pageable);
+        var model = assembler.toModel(post, null);
         return ResponseEntity.status(OK).body(model);
     }
 
@@ -61,9 +59,8 @@ public class PostController {
     public ResponseEntity<EntityModel<PostResponse>> createPost(
             @PathVariable @Positive(message = "Id must be greater than 0") Long authorId,
             @Valid @RequestBody PostRequest request) {
-        var pageable = PageRequest.of(0, 15, ASC);
         var post = postService.create(authorId, request);
-        var model = assembler.toModel(post, pageable);
+        var model = assembler.toModel(post, null);
         return ResponseEntity.status(CREATED).body(model);
     }
 
@@ -71,9 +68,8 @@ public class PostController {
     public ResponseEntity<EntityModel<PostResponse>> updatePostById(
             @PathVariable @Positive(message = "Id must be greater than 0") Long postId,
             @Valid @RequestBody PostRequest request) {
-        var pageable = PageRequest.of(0, 15, ASC);
         var post = postService.update(postId, request);
-        var model = assembler.toModel(post, pageable);
+        var model = assembler.toModel(post, null);
         return ResponseEntity.status(OK).body(model);
     }
 
@@ -81,18 +77,16 @@ public class PostController {
     public ResponseEntity<EntityModel<PostResponse>> patchPostById(
             @PathVariable @Positive(message = "Id must be greater than 0") Long postId,
             @RequestBody PostPatchRequest request) {
-        var pageable = PageRequest.of(0, 15, ASC);
         var post = postService.patch( postId, request);
-        var model = assembler.toModel(post, pageable);
+        var model = assembler.toModel(post, null);
         return ResponseEntity.status(OK).body(model);
     }
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<EntityModel<Map<String ,String>>> deletePostById(
             @PathVariable @Positive(message = "Id must be greater than 0") Long postId) {
-        var pageable = PageRequest.of(0, 15, ASC);
         var map = postService.deleteById(postId);
-        var model = assembler.deletedResponse(map, pageable);
+        var model = assembler.deletedResponse(map, null);
         return ResponseEntity.status(OK).body(model);
     }
 
